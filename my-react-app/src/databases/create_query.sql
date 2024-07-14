@@ -1,0 +1,18 @@
+create table plan(
+	id serial primary key,
+	no_req varchar(20) not null,
+	denominacion varchar(40) not null,
+	tipo varchar(30) not null,
+	fecha_plan date not null,
+	prioridad smallint not null,
+	hecho boolean not null,
+	no_responsable varchar(10) not null,
+	apellido varchar(20) not null,
+	ubicacion varchar(40) not null,
+	grado smallint not null,
+	descripcion varchar(60) not null,
+	inicio date,
+	fin date,
+	intervalo smallint,
+	tiempo_real smallint
+)

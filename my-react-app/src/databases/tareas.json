@@ -1,0 +1,28 @@
+{
+    "TAREA C215-A": [
+        "1. Verificar funcionamiento inicial para detectar irregularidades",
+        "2. Revisar la caída de presión entre filtros, si es mayor a cero y el led de 'Alarm' está encendido, requiere cambio de filtros",
+        "3. Desconectar electricidad y aire comprimido",
+        "4. Cambiar filtros de aire comprimido de ser necesario",
+        "5. Cambiar filtros de limpieza del colector de ser necesario",
+        "6. Al cambiar los fileros calibrar el control Delta P"
+    ],
+
+    "TAREA 247-C": [
+        "1. Verificar funcionamiento inicial para detectar irregularidades",
+        "2. Revisar la caída de presión entre filtros, si es mayor a cero y el led de 'Alarm' está encendido, requiere cambio de filtros",
+        "3. Desconectar electricidad y aire comprimido",
+        "4. Cambiar filtros de aire comprimido de ser necesario",
+        "5. Cambiar filtros de limpieza del colector de ser necesario",
+        "6. Al cambiar los fileros calibrar el control Delta P"
+    ],
+
+    "TAREA 8": [
+        "1. Verificar funcionamiento inicial para detectar irregularidades",
+        "2. Revisar la caída de presión entre filtros, si es mayor a cero y el led de 'Alarm' está encendido, requiere cambio de filtros",
+        "3. Desconectar electricidad y aire comprimido",
+        "4. Cambiar filtros de aire comprimido de ser necesario",
+        "5. Cambiar filtros de limpieza del colector de ser necesario",
+        "6. Al cambiar los fileros calibrar el control Delta P"
+    ]
+}

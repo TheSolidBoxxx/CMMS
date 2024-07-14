@@ -1,0 +1,18 @@
+.side-nav { 
+    position: relative; /*fixed*/
+    display: flex; 
+    flex-direction: column; 
+    width: 260px; min-width: 260px; 
+}
+
+.side-nav-sticky-container { 
+    position: sticky; 
+    top: 0; 
+    width: auto; 
+    max-height: 100vh; 
+    overflow: auto; 
+}
+
+.css-dip3t8{
+    background-color: blueviolet;
+}
