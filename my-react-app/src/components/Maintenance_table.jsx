@@ -810,9 +810,9 @@ export default function Maintenance_table({data}) {
               label="Responsable *"
               onChange={handleChangeResponsible}
             >
-              <MenuItem value={"69420 | Mierdinho"}>69420 | Mierdinho</MenuItem>
-              <MenuItem value={"666 | Hola"}>666 | Hola</MenuItem>
-              <MenuItem value={"4 | Lol"}>4 | Lol</MenuItem>
+              <MenuItem value={"69420 | Muniz"}>69420 | Mierdinho</MenuItem>
+              <MenuItem value={"12345 | Garcia"}>666 | Hola</MenuItem>
+              <MenuItem value={"88644 | Valverde"}>4 | Lol</MenuItem>
             </Select>
             <FormHelperText>Required</FormHelperText>
           </FormControl>
