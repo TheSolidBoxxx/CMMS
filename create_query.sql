@@ -16,3 +16,14 @@ create table plan(
 	intervalo smallint,
 	tiempo_real smallint
 )
+
+create table users(
+	id serial primary key,
+	apellido varchar(20) not null,
+	no_responsable varchar (10) not null,
+	ocupacion varchar(30) not null,
+	acceso smallint not null,
+	username varchar(30) not null,
+	passwd varchar(50) not null,
+	phone varchar(13) not null
+)

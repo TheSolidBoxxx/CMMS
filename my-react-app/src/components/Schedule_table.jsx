@@ -66,6 +66,7 @@ function mapDates(){
 function createData(id, no_responsable, apellido, no_req, inicio, fin, tiempo, intervalo, fecha_plan, grado, tiempo_real) {
   const date_inicio = new Date(inicio);
   const options = { month: '2-digit', day: '2-digit', year: 'numeric' };
+
   inicio == null ? '' : date_inicio.toLocaleDateString('en', options);
 
   const date_fin = new Date(fin);
@@ -73,12 +74,6 @@ function createData(id, no_responsable, apellido, no_req, inicio, fin, tiempo, i
 
   const date_plan = new Date(fecha_plan);
   fecha_plan = date_plan.toLocaleDateString('en', options);
-
-  const dateStart_plan = new Date(inicio);
-  inicio = date_plan.toLocaleDateString('en', options);
-
-  const dateEnd_plan = new Date(fin);
-  fin = date_plan.toLocaleDateString('en', options);
 
   return {
         id,
@@ -468,7 +463,8 @@ export default function Schedule_table({data}) {
                         var time_diff = d2.getTime() - d1.getTime();  
                         var day_diff = time_diff / (1000 * 60 * 60 * 24);
                         
-                        if((row.intervalo - ((i*7) % row.intervalo) < 7 && row.grado != 1) || (day_diff > -7 && day_diff <= 0 && row.grado == 1)){
+                        //console.log(`${data} e ${row.intervalo - ((i*7) % row.intervalo)} p ${day_diff}`);
+                        if((row.intervalo - ((i*7) % row.intervalo) <= 7 && row.grado != 1 && day_diff > -7) || (day_diff > -7 && day_diff <= 0 && row.grado == 1)){
                           return(
                             <TableCell align="left" key={i} style={{backgroundColor: row.grado == 1? '#FFC000': row.grado == 2? '#2F75B5': '#F4B084', color:'white'}}>
                               {row.grado == 1? 'MC': row.grado == 2? 'MPT': 'MPD'}</TableCell>

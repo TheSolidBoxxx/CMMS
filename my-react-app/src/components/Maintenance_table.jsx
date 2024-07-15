@@ -4,6 +4,7 @@ import PathConstants from "../routes/pathConstants";
 import TasksModal from "./Modals/TasksModal"
 import ReactDOM from "react-dom/client";
 import Tasks from "../databases/tareas.json"
+import Locations from "../databases/locations.json"
 
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
@@ -571,7 +572,7 @@ export default function Maintenance_table({data}) {
                   const labelId = `enhanced-table-checkbox-${index}`;
   
                   return (
-                    <TableRow
+                    <TableRow style={{backgroundColor: row.dias < 0 ? '#ff8787' : 'white'}}
                       hover
                       role="checkbox"
                       aria-checked={isItemSelected}
@@ -592,7 +593,7 @@ export default function Maintenance_table({data}) {
                       <TableCell align="left">{row.id}</TableCell>
                       <TableCell align="left">{row.no_req}</TableCell>
                       <TableCell align="left">{<Link to={PathConstants.HOME}>{row.denominacion}</Link>}</TableCell>
-                      <TableCell align="left" onClick={() => handleOpen(row.tipo, row.id)} style={{ color: 'blue', cursor: 'pointer' }}>{row.tipo}</TableCell>
+                      <TableCell align="left" onClick={() => handleOpen(row.tipo, row.id)} style={{ color: row.hecho == false ? 'blue' : 'green', cursor: 'pointer' }}>{row.tipo}</TableCell>
                       <TableCell align="left">{row.dias}</TableCell>
                       <TableCell align="left">{row.fecha_plan}</TableCell>
                       <TableCell align="center" style={{backgroundColor: row.prioridad == 1? 'green' : row.prioridad == 2? 'yellow' : 'red', color: row.prioridad == 2? 'black' : 'white'}}>{row.prioridad}</TableCell>
@@ -783,11 +784,11 @@ export default function Maintenance_table({data}) {
               label="Tipo de tarea *"
               onChange={handleChangeTask}
             >
-              <MenuItem value="">
-              </MenuItem>
-              <MenuItem value={"TAREA C215-A"}>TAREA C215-A</MenuItem>
-              <MenuItem value={"TAREA 247-C"}>TAREA 247-C</MenuItem>
-              <MenuItem value={"TAREA 8"}>TAREA 8</MenuItem>
+              {Object.keys(Tasks).map((choice) => (
+                <MenuItem key={choice} value={choice}>
+                  {choice}
+                </MenuItem>
+              ))}
             </Select>
             <FormHelperText>Required</FormHelperText>
           </FormControl>
@@ -809,8 +810,6 @@ export default function Maintenance_table({data}) {
               label="Responsable *"
               onChange={handleChangeResponsible}
             >
-              <MenuItem value="">
-              </MenuItem>
               <MenuItem value={"69420 | Mierdinho"}>69420 | Mierdinho</MenuItem>
               <MenuItem value={"666 | Hola"}>666 | Hola</MenuItem>
               <MenuItem value={"4 | Lol"}>4 | Lol</MenuItem>
@@ -827,11 +826,11 @@ export default function Maintenance_table({data}) {
               label="Ubicación *"
               onChange={handleChangeLocation}
             >
-              <MenuItem value="">
-              </MenuItem>
-              <MenuItem value={"M02"}>M02</MenuItem>
-              <MenuItem value={"M11"}>M11</MenuItem>
-              <MenuItem value={"M14"}>M14</MenuItem>
+              {Locations["Locations"].map((choice) => (
+                <MenuItem key={choice} value={choice}>
+                {choice}
+                </MenuItem>
+              ))}
             </Select>
             <FormHelperText>Required</FormHelperText>
           </FormControl>
@@ -865,9 +864,9 @@ export default function Maintenance_table({data}) {
             >
               <MenuItem value="">
               </MenuItem>
-              <MenuItem value={1}>1</MenuItem>
-              <MenuItem value={2}>2</MenuItem>
-              <MenuItem value={3}>3</MenuItem>
+              <MenuItem value={1}>1 (Baja)</MenuItem>
+              <MenuItem value={2}>2 (Media)</MenuItem>
+              <MenuItem value={3}>3 (Alta)</MenuItem>
             </Select>
             <FormHelperText>Required</FormHelperText>
           </FormControl>

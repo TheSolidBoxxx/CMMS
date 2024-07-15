@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import ScheduleTable from "../components/Schedule_table"
-import WeeksTable from "../components/Weeks_table"
 import "./box.css"
 
 export default function WorkOrders_main() {
