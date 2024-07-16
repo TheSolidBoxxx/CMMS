@@ -9,9 +9,11 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import Alert from '@mui/material/Alert';
 //import users from "./../../data/users";
 //import image from "./Images/image.jpg";
 import authService from "./../service/authService";
+import { useNavigate } from "react-router-dom";
 
 function Copyright() {
   return
@@ -28,10 +30,13 @@ function Copyright() {
 }
 
 export default function Login(props) {
+  const navigateTo = useNavigate();
 
   if(authService.isLoggedIn()){
 
-    props.history.push("./home");
+    React.useEffect(() => {
+    navigateTo("/dashboard");
+    }, []);
 
   }
 
@@ -46,20 +51,38 @@ export default function Login(props) {
 
   }
 
-  const isVerifiedUser=(username, password)=>{
-
+  const isVerifiedUser=(dbData)=>{    
     //return users.find((user)=> user.username === username && user.password === password);
-
   };
 
 
   const handleLogin = ()=>{
-      if(isVerifiedUser(account.username,account.password)){
+    var dbData = {"username":account.username,"passwd":account.password}
+
+    fetch('/usrs', {
+      method: 'POST',
+      
+      body: JSON.stringify(dbData),
+      headers: {'Content-Type': 'application/json'},
+    })
+    .then((incoming) => incoming.json())
+    .then((response) => {
+      if(response){
         authService.doLogIn(account.username);
         setAccount({username:"",password:""});
-        props.history.push("/home");
 
+        // React.useEffect(() => {
+        navigateTo("/dashboard");
+        // }, []);
+        
+      }else{
+          {<Alert variant="outlined" severity="error">
+            This is an outlined error Alert.
+          </Alert>}
       }
+      //Alert.alert(JSON.stringify(response.body));
+    });
+      
   };
 
   return (
@@ -109,7 +132,7 @@ export default function Login(props) {
               label="Remember me"
             />
             <Button
-              type="submit"
+              //type="submit"
               fullWidth
               variant="contained"
               color="primary"

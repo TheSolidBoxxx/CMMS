@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 const doLogIn = (username) => {
     localStorage.setItem("username", username);
     localStorage.setItem("isLoggedIn", true);
@@ -8,11 +10,12 @@ const doLogIn = (username) => {
   };
   
   
-  const logOut = (props) =>{
+  const logOut = () =>{
+    //const navigateTo = useNavigate();
   
     localStorage.removeItem("username");
     localStorage.removeItem("isLoggedIn");
-    props.history.push("/login");
+    //navigateTo("/");
   
   };
   

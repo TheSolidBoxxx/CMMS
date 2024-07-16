@@ -29,13 +29,27 @@ app.get('/api', (req, res) => {
   });
 });
 
-app.get('/tasks', (req, res) => {
-  db.query("SELECT * FROM tasks", (err, resu) => {
+app.get('/usrs', (req, res) => {
+  db.query("SELECT * FROM users", (err, resu) => {
     if (err) {
       console.error("Error executing query", err.stack);
     } else {
       res.json(resu.rows);
     }
+    //db.end();
+  });
+});
+
+app.post("/usrs", (req, res) => {
+  console.log(req.body);
+  db.query(`SELECT * FROM users WHERE username = '${req.body.username}'`, (err, resu) => {
+    if (err) {
+      res.send(false);
+    } else {
+      if(resu.rows.length > 0)
+        resu.rows[0]["passwd"] == req.body.passwd ? res.send(true) : res.send(false);
+    }
+    //db.end();
   });
 });
   
