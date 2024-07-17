@@ -25,5 +25,5 @@ create table users(
 	acceso smallint not null,
 	username varchar(30) not null,
 	passwd varchar(50) not null,
-	phone varchar(13) not null
+	email varchar(50) not null
 )
