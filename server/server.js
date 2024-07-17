@@ -34,7 +34,7 @@ app.get('/api', (req, res) => {
 });
 
 app.get('/usrs', (req, res) => {
-  db.query("SELECT * FROM users", (err, resu) => {
+  db.query("SELECT no_responsable, apellido FROM users", (err, resu) => {
     if (err) {
       console.error("Error executing query", err.stack);
     } else {

@@ -56,7 +56,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import dayjs from 'dayjs';
 
-function createData(id, no_req, denominacion, tipo, fecha_plan, prioridad, hecho, ubicacion, grado, descripcion, intervalo, dias, dia) {
+function createData(id, no_req, denominacion, tipo, fecha_plan, prioridad, hecho, ubicacion, grado, descripcion, intervalo, dias, dia, inicio, fin) {
   return {
         id, 
         no_req,
@@ -70,7 +70,9 @@ function createData(id, no_req, denominacion, tipo, fecha_plan, prioridad, hecho
         descripcion, 
         intervalo,
         dias,
-        dia
+        dia,
+        inicio,
+        fin
     };
   }
   
@@ -377,7 +379,7 @@ export default function Maintenance_table({data}) {
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(25);
 
     const [open, setOpen] = React.useState(false);
     const [req, setReq] = React.useState("TAREA C215-A");
@@ -471,15 +473,21 @@ export default function Maintenance_table({data}) {
     };
 
     var rows = [];
+    var usrs = [];
     const currentDate = new Date();
-    for(let i = 0; i < data.length; i++){
+    for(let i = 0; i < data.data.length; i++){
       
-      const regDate = new Date(Object.values(data)[i].fecha_plan);
+      const regDate = new Date(Object.values(data.data)[i].fecha_plan);
       var dayDiff = Math.round((regDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
 
-      rows[i] = createData(Object.values(data)[i].id, Object.values(data)[i].no_req, Object.values(data)[i].denominacion, Object.values(data)[i].tipo,
-                    Object.values(data)[i].fecha_plan, Object.values(data)[i].prioridad, Object.values(data)[i].hecho, Object.values(data)[i].ubicacion,
-                    Object.values(data)[i].grado, Object.values(data)[i].descripcion, Object.values(data)[i].intervalo, dayDiff, weekdays[regDate.getDay()]);
+      rows[i] = createData(Object.values(data.data)[i].id, Object.values(data.data)[i].no_req, Object.values(data.data)[i].denominacion, Object.values(data.data)[i].tipo,
+                    Object.values(data.data)[i].fecha_plan, Object.values(data.data)[i].prioridad, Object.values(data.data)[i].hecho, Object.values(data.data)[i].ubicacion,
+                    Object.values(data.data)[i].grado, Object.values(data.data)[i].descripcion, Object.values(data.data)[i].intervalo, dayDiff, weekdays[regDate.getDay()],
+                    Object.values(data.data)[i].inicio, Object.values(data.data)[i].fin);
+    }
+
+    for(let i = 0; i < data.usrData.length; i++){
+      usrs[i] = `${data.usrData[i].no_responsable} | ${data.usrData[i].apellido}`
     }
 
     const handleRequestSort = (event, property) => {
@@ -570,9 +578,16 @@ export default function Maintenance_table({data}) {
                 {visibleRows.map((row, index) => {
                   const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
+                  
+                  if(row.hecho == true){
+                    if(row.fecha_plan >= row.fin)
+                      console.log(row.id,"On time");
+                    else
+                      console.log(row.id,"Overdue");
+                  }
   
                   return (
-                    <TableRow style={{backgroundColor: row.dias < 0 ? '#ff8787' : 'white'}}
+                    <TableRow style={{backgroundColor: row.dias < 0 ? row.hecho == true ? row.fecha_plan >= row.fin ? '#bdffb3' : '#fdff9c' : '#ff8787' : 'white'}}
                       hover
                       role="checkbox"
                       aria-checked={isItemSelected}
@@ -594,7 +609,7 @@ export default function Maintenance_table({data}) {
                       <TableCell align="left">{row.no_req}</TableCell>
                       <TableCell align="left">{<Link to={PathConstants.HOME}>{row.denominacion}</Link>}</TableCell>
                       <TableCell align="left" onClick={() => handleOpen(row.tipo, row.id)} style={{ color: row.hecho == false ? 'blue' : 'green', cursor: 'pointer' }}>{row.tipo}</TableCell>
-                      <TableCell align="left">{row.dias}</TableCell>
+                      <TableCell align="left">{row.hecho == true ? '' : row.dias}</TableCell>
                       <TableCell align="left">{row.fecha_plan}</TableCell>
                       <TableCell align="center" style={{backgroundColor: row.prioridad == 1? 'green' : row.prioridad == 2? 'yellow' : 'red', color: row.prioridad == 2? 'black' : 'white'}}>{row.prioridad}</TableCell>
                       <TableCell align="left">{row.dia}</TableCell>
@@ -810,9 +825,9 @@ export default function Maintenance_table({data}) {
               label="Responsable *"
               onChange={handleChangeResponsible}
             >
-              <MenuItem value={"69420 | Muniz"}>69420 | Muniz</MenuItem>
-              <MenuItem value={"12345 | Garcia"}>12345 | Garcia</MenuItem>
-              <MenuItem value={"88644 | Valverde"}>88644 | Valverde</MenuItem>
+              {usrs.map((usr) => (
+                <MenuItem key={usr} value={usr}>{usr}</MenuItem>
+              ))}
             </Select>
             <FormHelperText>Required</FormHelperText>
           </FormControl>

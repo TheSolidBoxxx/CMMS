@@ -27,6 +27,16 @@ export default function WorkOrders_main() {
 
   if(data.length == 0) return;
 
+  for(let i = 0; i < data.length; i++){
+    if(data[i].inicio == null && data[i].fin == null) continue;
+    const date2 = new Date(data[i].inicio);
+    const date3 = new Date(data[i].fin);
+
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    data[i].inicio = date2.toLocaleDateString('en', options);
+    data[i].fin = date3.toLocaleDateString('en', options);
+  }
+
   return (
     <div className='rowC'>
       <ScheduleTable data={data}/>

@@ -303,7 +303,7 @@ export default function Schedule_table({data}) {
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(25);
 
     const [open, setOpen] = React.useState(false);
     const [req, setReq] = React.useState("TAREA C215-A");
@@ -456,7 +456,7 @@ export default function Schedule_table({data}) {
                       <TableCell align="left" onClick={() => handleOpen(row.no_req)} style={{ color: 'blue', cursor: 'pointer' }}>{row.no_req}</TableCell>
                       <TableCell align="left">{row.inicio}</TableCell>
                       <TableCell align="left">{row.fin}</TableCell>
-                      <TableCell align="left">{row.tiempo_real}</TableCell>
+                      <TableCell align="left">{row.tiempo_real != null ? `${row.tiempo_real} minutos` : ''}</TableCell>
                       {mapDates().map(function(data, i){
                         const d1 = new Date(row.fecha_plan)
                         const d2 = new Date(data);
