@@ -101,7 +101,7 @@ export default function Login(props) {
       >
         <div >
           <Typography component="h1" variant="h5">
-            Sign in
+            Inicio de sesión
           </Typography>
           <form  noValidate>
             <TextField
@@ -111,7 +111,7 @@ export default function Login(props) {
               required
               fullWidth
               id="username"
-              label="Username"
+              label="Nombre de usuario"
               name="username"
               autoFocus
             />
@@ -122,14 +122,14 @@ export default function Login(props) {
               required
               fullWidth
               name="password"
-              label="Password"
+              label="Contraseña"
               type="password"
               id="password"
               autoComplete="current-password"
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+              label="Recuérdame"
             />
             <Button
               //type="submit"
@@ -138,7 +138,7 @@ export default function Login(props) {
               color="primary"
               onClick = {handleLogin}
             >
-              Sign In
+              Iniciar sesión
             </Button>
             <Box mt={5}>
               <Copyright />

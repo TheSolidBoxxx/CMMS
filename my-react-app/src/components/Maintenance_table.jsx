@@ -578,13 +578,6 @@ export default function Maintenance_table({data}) {
                 {visibleRows.map((row, index) => {
                   const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-                  
-                  if(row.hecho == true){
-                    if(row.fecha_plan >= row.fin)
-                      console.log(row.id,"On time");
-                    else
-                      console.log(row.id,"Overdue");
-                  }
   
                   return (
                     <TableRow style={{backgroundColor: row.dias < 0 ? row.hecho == true ? row.fecha_plan >= row.fin ? '#bdffb3' : '#fdff9c' : '#ff8787' : 'white'}}
