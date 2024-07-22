@@ -34,7 +34,7 @@ app.get('/api', (req, res) => {
 });
 
 app.get('/usrs', (req, res) => {
-  db.query("SELECT no_responsable, apellido FROM users", (err, resu) => {
+  db.query("SELECT username, no_responsable, apellido, ocupacion FROM users", (err, resu) => {
     if (err) {
       console.error("Error executing query", err.stack);
     } else {
@@ -48,10 +48,11 @@ app.post("/usrs", (req, res) => {
   console.log(req.body);
   db.query(`SELECT * FROM users WHERE username = '${req.body.username}'`, (err, resu) => {
     if (err) {
-      res.send(false);
+      res.json({});
     } else {
       if(resu.rows.length > 0)
-        resu.rows[0]["passwd"] == req.body.passwd ? res.send(true) : res.send(false);
+        resu.rows[0]["passwd"] == req.body.passwd ? res.json([{username: resu.rows[0]["username"], no_responsable: resu.rows[0]["no_responsable"],
+          apellido: resu.rows[0]["apellido"], ocupacion: resu.rows[0]["ocupacion"], passwd: resu.rows[0]["passwd"]}]) : res.json({});
     }
     //db.end();
   });

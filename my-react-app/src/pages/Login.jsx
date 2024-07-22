@@ -67,8 +67,8 @@ export default function Login(props) {
     })
     .then((incoming) => incoming.json())
     .then((response) => {
-      if(response){
-        authService.doLogIn(account.username);
+      if(response.length > 0){
+        authService.doLogIn(account.username, response[0].no_responsable, response[0].apellido, response[0].ocupacion);
         setAccount({username:"",password:""});
 
         // React.useEffect(() => {

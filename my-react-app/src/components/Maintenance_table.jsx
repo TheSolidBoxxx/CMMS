@@ -178,7 +178,7 @@ function createData(id, no_req, denominacion, tipo, fecha_plan, prioridad, hecho
       id: 'grado',
       numeric: false,
       disablePadding: false,
-      label: 'Grado',
+      label: 'Tipo de mant.',
     },
     {
       id: 'descripcion',
@@ -275,7 +275,7 @@ function createData(id, no_req, denominacion, tipo, fecha_plan, prioridad, hecho
           </Typography>
         ) : (
           <Typography
-            sx={{ flex: '1 1 100%' }}
+            sx={{ flex: '1 1 100%', fontWeight:'bold'}}
             variant="h6"
             id="tableTitle"
             component="div"
@@ -553,12 +553,12 @@ export default function Maintenance_table({data}) {
     );
 
     return (
-      <div>
-        <Button variant="outlined" startIcon={<Add />} onClick={handleOpenReg}>
-          Add
+      <div style={{marginTop:25, marginLeft:15}}>
+        <Button variant="contained" startIcon={<Add />} style={{backgroundColor:'black', fontWeight:'bold', marginBottom:15}}onClick={handleOpenReg}>
+          Agregar nueva orden de trabajo
         </Button>
       <Box sx={{ width: '100%' }}>
-        <Paper sx={{ width: '100%', mb: 2 }}>
+        <Paper sx={{ width: '100%', mb: 2, borderRadius: 5, boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)' }}>
           <EnhancedTableToolbar numSelected={selected.length} selected={selected}/>
           <TableContainer>
             <Table
@@ -610,7 +610,7 @@ export default function Maintenance_table({data}) {
                       <TableCell align="left">{row.ubicacion}</TableCell>
                       <TableCell align="left" style={{backgroundColor: row.grado == 1? '#FFC000': row.grado == 2? '#2F75B5': '#F4B084'}}>{row.grado == 1? 'MC': row.grado == 2? 'MPT': 'MPD'}</TableCell>
                       <TableCell align="left">{row.descripcion}</TableCell>
-                      <TableCell align="left">{row.intervalo}</TableCell>
+                      <TableCell align="left">{`${row.intervalo} días`}</TableCell>
                     </TableRow>
                   );
                 })}

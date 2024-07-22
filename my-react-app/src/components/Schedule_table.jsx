@@ -42,6 +42,8 @@ import CommentIcon from '@mui/icons-material/Comment';
 import Send from '../icons/Send'
 import { green } from '@mui/material/colors';
 
+import "./Schedule_table.css"
+
 function mapDates(){
   const year = 2024;
   const weeksStartDates = [];
@@ -178,6 +180,8 @@ function createData(id, no_responsable, apellido, no_req, inicio, fin, tiempo, i
     const createSortHandler = (property) => (event) => {
       onRequestSort(event, property);
     };
+
+    const currentDate = new Date();
   
     return (
       <TableHead>
@@ -214,8 +218,13 @@ function createData(id, no_responsable, apellido, no_req, inicio, fin, tiempo, i
               </TableSortLabel>
             </TableCell>
           ))}
-          {mapDates().map((data, i) => (
-            <TableCell
+          {mapDates().map((data, i) => {
+            const d = new Date(data);
+            let time_diff = d.getTime() - currentDate.getTime();
+            let day_diff = time_diff / (1000 * 60 * 60 * 24);
+
+            return(
+            <TableCell style={{backgroundColor: day_diff > -7 && day_diff < 0 ? '#f94449' : 'white', color: day_diff > -7 && day_diff < 0 ? 'white' : 'black', minWidth:'25px', borderRadius:'25%', fontWeight:'bold'}}
               key={i}
               align={'left'}
               padding={'normal'}
@@ -227,7 +236,8 @@ function createData(id, no_responsable, apellido, no_req, inicio, fin, tiempo, i
                 </Box>
               ) : null}
             </TableCell>
-          ))}
+            )
+          })}
         </TableRow>
       </TableHead>
     );
@@ -267,7 +277,7 @@ function createData(id, no_responsable, apellido, no_req, inicio, fin, tiempo, i
           </Typography>
         ) : (
           <Typography
-            sx={{ flex: '1 1 100%' }}
+            sx={{ flex: '1 1 100%', fontWeight:'bold' }}
             variant="h6"
             id="tableTitle"
             component="div"
@@ -309,6 +319,8 @@ export default function Schedule_table({data}) {
     const [req, setReq] = React.useState("TAREA C215-A");
     const handleOpen = (key) => {setOpen(true); setReq(key);}
     const handleClose = () => setOpen(false);
+
+    const currentDate = new Date();
 
     const [checked, setChecked] = React.useState([0]);
 
@@ -408,9 +420,9 @@ export default function Schedule_table({data}) {
     );
   
     return (
-      <div>
+      <div style={{marginTop:25, marginLeft:15}}>
       <Box sx={{ width: '100%' }}>
-        <Paper sx={{ width: '100%', mb: 2 }}>
+        <Paper sx={{ width: '100%', mb: 2, borderRadius: 5, boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)' }}>
           <EnhancedTableToolbar numSelected={selected.length} />
           <TableContainer>
             <Table
@@ -460,13 +472,16 @@ export default function Schedule_table({data}) {
                       {mapDates().map(function(data, i){
                         const d1 = new Date(row.fecha_plan)
                         const d2 = new Date(data);
-                        var time_diff = d2.getTime() - d1.getTime();  
-                        var day_diff = time_diff / (1000 * 60 * 60 * 24);
+                        let time_diff = d2.getTime() - d1.getTime();  
+                        let day_diff = time_diff / (1000 * 60 * 60 * 24);
                         
                         //console.log(`${data} e ${row.intervalo - ((i*7) % row.intervalo)} p ${day_diff}`);
                         if((row.intervalo - ((i*7) % row.intervalo) <= 7 && row.grado != 1 && day_diff > -7) || (day_diff > -7 && day_diff <= 0 && row.grado == 1)){
+                          let Ctime_diff = d2.getTime() - currentDate.getTime();  
+                          let Cday_diff = Ctime_diff / (1000 * 60 * 60 * 24);
+                          
                           return(
-                            <TableCell align="left" key={i} style={{backgroundColor: row.grado == 1? '#FFC000': row.grado == 2? '#2F75B5': '#F4B084', color:'white'}}>
+                            <TableCell className={Cday_diff > -7 && Cday_diff < 0 ? 'blink' : ''} align="center" key={i} style={{backgroundColor: row.grado == 1? '#FFC000': row.grado == 2? '#2F75B5': '#F4B084', color:'white', borderRadius:'50%'}}>
                               {row.grado == 1? 'MC': row.grado == 2? 'MPT': 'MPD'}</TableCell>
                           )                       
                         }else{
