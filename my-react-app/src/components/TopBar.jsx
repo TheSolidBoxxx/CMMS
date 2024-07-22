@@ -63,6 +63,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function TopBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [sidebar, setSidebar] = React.useState(false);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -82,6 +83,20 @@ export default function TopBar() {
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleSideBarOpen = (event) => {
+    setSidebar(!sidebar);
+    
+    if(sidebar){
+      document.getElementsByClassName('side-nav')[0].style.width = '250px';
+      document.getElementsByClassName('side-nav')[0].style.minWidth = '250px';
+      document.getElementsByClassName('side-nav-sticky-container')[0].style.width = '250px';
+    }else{
+      document.getElementsByClassName('side-nav')[0].style.width = '60px';
+      document.getElementsByClassName('side-nav')[0].style.minWidth = '60px';
+      document.getElementsByClassName('side-nav-sticky-container')[0].style.width = '60px';
+    }
   };
 
   const menuId = 'primary-search-account-menu';
@@ -169,6 +184,7 @@ export default function TopBar() {
             color="inherit"
             aria-label="open drawer"
             sx={{ mr: 2 }}
+            onClick={handleSideBarOpen}
           >
             <MenuIcon />
           </IconButton>
