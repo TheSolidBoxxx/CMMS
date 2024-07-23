@@ -7,7 +7,8 @@ export default defineConfig({
   server:{
     proxy:{
       '/api': 'http://localhost:3000',
-      '/usrs': 'http://localhost:3000'
+      '/usrs': 'http://localhost:3000',
+      '/tasks': 'http://localhost:3000'
     }
   }
 })

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function WorkOrders_main() {
   const [data, setData] = React.useState([]);
+  const [tasksData, setTasksData] = React.useState([]);
   const navigateTo = useNavigate();
 
   if(!authService.isLoggedIn()){
@@ -25,7 +26,16 @@ export default function WorkOrders_main() {
       });
   }, []);
 
-  if(data.length == 0) return;
+  React.useEffect(() => {
+    // Fetch data from the backend
+    fetch("/tasks")
+      .then((response) => response.json())
+      .then((data) => {
+        setTasksData(data);
+      });
+  }, []);
+
+  if(data.length == 0 && tasksData.length == 0) return;
 
   for(let i = 0; i < data.length; i++){
     if(data[i].inicio == null && data[i].fin == null) continue;
@@ -39,7 +49,7 @@ export default function WorkOrders_main() {
 
   return (
     <div className='rowC'>
-      <ScheduleTable data={data}/>
+      <ScheduleTable data={{data, tasksData}}/>
     </div>
   );
 }

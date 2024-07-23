@@ -135,6 +135,7 @@ export default function Graphic({data}) { //Tasks[req].map((value) => {
               type: 'ordinal',
               colors: ['#3bb143', '#f94449'],
             } }]}
+            yAxis={[{label: 'Cantidad', tickMaxStep:1, tickMinStep:1}]}
             margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
           />
         </Paper>
@@ -185,6 +186,7 @@ export default function Graphic({data}) { //Tasks[req].map((value) => {
               type: 'ordinal',
               colors: ['#708090', '#151b54'],
             } }]}
+            yAxis={[{label: 'Cantidad', tickMaxStep:1, tickMinStep:1}]}
             margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
           />
         </Paper>

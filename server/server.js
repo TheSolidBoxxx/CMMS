@@ -83,7 +83,25 @@ app.patch("/api", (req, res) => {
   console.log(req.body); // From body-parser
   db.query("UPDATE plan SET inicio = $1, fin = $2, tiempo_real = $3, hecho = $4 WHERE id = $5",
     [req.body.inicio, req.body.fin, req.body.tiempo_real, req.body.hecho, req.body.id]
-  )
+  );
+});
+
+app.post("/tasks", (req, res) => {
+  console.log(req.body);
+  db.query("INSERT INTO tasks(order_id, status, inicio, fin, tiempo_real, hecho, pos) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+    [req.body.id, req.body.status, req.body.inicio, req.body.fin, req.body.tiempo_real, req.body.hecho, req.body.pos]
+  );
+});
+
+app.get('/tasks', (req, res) => {
+  db.query("SELECT * FROM tasks", (err, resu) => {
+    if (err) {
+      console.error("Error executing query", err.stack);
+    } else {
+      res.json(resu.rows);
+    }
+    //db.end();
+  });
 });
 
 app.delete("/api", (req, res) => {

@@ -402,7 +402,7 @@ export default function Maintenance_table({data}) {
     const [date, setDate] = React.useState(dayjs());
     const [denominacion, setDenominacion] = React.useState('');
     const [desc, setDesc] = React.useState('');
-    const [interval, setInterval] = React.useState('');
+    const [interval, setInterval] = React.useState(7);
     const [realTime, setRealTime] = React.useState('');
 
     const [startDate, setStartDate] = React.useState(dayjs());
@@ -428,6 +428,18 @@ export default function Maintenance_table({data}) {
 
     const handleChangeMtType = (event) => {
       setMtType(event.target.value);
+
+      switch(event.target.value){
+        case 1:
+          setInterval(0);
+          setPriority(3);
+          break;
+        
+        case 2:
+        case 3:
+          setInterval(7);
+          break;
+      }
     };
 
     const handleChangePriority = (event) => {
@@ -439,6 +451,9 @@ export default function Maintenance_table({data}) {
     };
 
     const handleChangeInterval = (event) => {
+      event.target.value = event.target.value < 7 ? 7 : event.target.value;
+      event.target.value = event.target.value > 365 ? 365 : event.target.value;
+      console.log(event.target.value < 7);
       setInterval(event.target.value);
     };
 
@@ -475,6 +490,9 @@ export default function Maintenance_table({data}) {
     var rows = [];
     var usrs = [];
     const currentDate = new Date();
+    const today = dayjs();
+    const nextYear = dayjs().add(1, 'year');
+
     for(let i = 0; i < data.data.length; i++){
       
       const regDate = new Date(Object.values(data.data)[i].fecha_plan);
@@ -600,8 +618,8 @@ export default function Maintenance_table({data}) {
                       </TableCell>
                       <TableCell align="left">{row.id}</TableCell>
                       <TableCell align="left">{row.no_req}</TableCell>
-                      <TableCell align="left">{<Link to={PathConstants.HOME}>{row.denominacion}</Link>}</TableCell>
-                      <TableCell align="left" onClick={() => handleOpen(row.tipo, row.id)} style={{ color: row.hecho == false ? 'blue' : 'green', cursor: 'pointer' }}>{row.tipo}</TableCell>
+                      <TableCell align="left">{row.denominacion}</TableCell>
+                      <TableCell align="left">{row.tipo}</TableCell>
                       <TableCell align="left">{row.hecho == true ? '' : row.dias}</TableCell>
                       <TableCell align="left">{row.fecha_plan}</TableCell>
                       <TableCell align="center" style={{backgroundColor: row.prioridad == 1? 'green' : row.prioridad == 2? 'yellow' : 'red', color: row.prioridad == 2? 'black' : 'white'}}>{row.prioridad}</TableCell>
@@ -685,7 +703,7 @@ export default function Maintenance_table({data}) {
           </Typography>
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
+            <DatePicker minDate={today} maxDate={nextYear}
               label="Fecha inicio"
               value={startDate}
               onChange={(newValue) => setStartDate(newValue)}
@@ -693,7 +711,7 @@ export default function Maintenance_table({data}) {
           </LocalizationProvider>
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
+            <DatePicker minDate={today} maxDate={nextYear}
               label="Fecha fin"
               value={endDate}
               onChange={(newValue) => setEndDate(newValue)}
@@ -748,12 +766,12 @@ export default function Maintenance_table({data}) {
     >
       <Fade in={openReg}>
         <Box sx={style}>
-          <Typography id="transition-modal-title" variant="h4" component="h2" align='center' sx={{ mt: 2, mb: 2, color:'black'}}>
-            {}
+          <Typography id="transition-modal-title" variant="h4" component="h2" align='center' sx={{ mt: 2, mb: 2, color:'black', fontWeight:'bold'}}>
+          Nueva orden de trabajo
           </Typography>
           <Typography id="transition-modal-description" component="span" sx={{ mt: 2, color:'black', fontSize: 16, m: 1 }}>
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-              {}
+            {}
             </List>
           </Typography>
           <Box sx={{mt:4}} textAlign='center'>
@@ -772,6 +790,7 @@ export default function Maintenance_table({data}) {
               label="Requerimiento"
               InputProps={{
                 readOnly: true,
+                maxLength: 20
               }}
               defaultValue="Test"
           />
@@ -781,6 +800,7 @@ export default function Maintenance_table({data}) {
             id="outlined-required"
             label="Denominación"
             onChange={handleDenominacion}
+            inputProps={{ maxLength: 40 }}
           />
 
           <FormControl required sx={{ m: 1, minWidth: 300 }}>
@@ -802,7 +822,7 @@ export default function Maintenance_table({data}) {
           </FormControl>
           
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
+            <DatePicker minDate={today} maxDate={nextYear}
               label="Fecha planificada"
               value={date}
               onChange={(newValue) => setDate(newValue)}
@@ -861,7 +881,7 @@ export default function Maintenance_table({data}) {
             <FormHelperText>Required</FormHelperText>
           </FormControl>
 
-          <FormControl required sx={{ m: 1, minWidth: 120 }}>
+          <FormControl required sx={{ m: 1, minWidth: 120 }} disabled={mtType == 1}>
             <InputLabel id="demo-simple-select-required-label">Prioridad</InputLabel>
             <Select
               labelId="demo-simple-select-required-label"
@@ -879,19 +899,19 @@ export default function Maintenance_table({data}) {
             <FormHelperText>Required</FormHelperText>
           </FormControl>
 
-          <TextField  style = {{width: 500}}
+          <TextField style = {{width: 500}}
             required
             id="outlined-required"
             label="Descripción"
             value={desc}
             onChange={handleChangeDesc}
+            inputProps={{ maxLength: 60 }}
           />
 
-          <TextField  style = {{width: 120}}
+          <TextField style = {{width: 120}} disabled={mtType == 1}
             id="outlined-number"
             label="Intérvalo (días)"
             type="number"
-            defaultValue="90"
             value={interval}
             onChange={handleChangeInterval}
             InputLabelProps={{

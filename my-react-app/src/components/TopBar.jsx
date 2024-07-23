@@ -20,6 +20,8 @@ import authService from "./../service/authService";
 import PathConstants from "../routes/pathConstants";
 import { Link } from 'react-router-dom';
 
+import $ from 'jquery';
+
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -89,13 +91,24 @@ export default function TopBar() {
     setSidebar(!sidebar);
     
     if(sidebar){
-      document.getElementsByClassName('side-nav')[0].style.width = '250px';
-      document.getElementsByClassName('side-nav')[0].style.minWidth = '250px';
-      document.getElementsByClassName('side-nav-sticky-container')[0].style.width = '250px';
+      $('.side-nav').animate({
+        width: '250px',
+        minWidth: '250px'
+      }, 500);
+    
+      $('.side-nav-sticky-container').animate({
+        width: '250px'
+      }, 500);
+      
     }else{
-      document.getElementsByClassName('side-nav')[0].style.width = '60px';
-      document.getElementsByClassName('side-nav')[0].style.minWidth = '60px';
-      document.getElementsByClassName('side-nav-sticky-container')[0].style.width = '60px';
+      $('.side-nav').animate({
+        width: '60px',
+        minWidth: '60px'
+      }, 500);
+    
+      $('.side-nav-sticky-container').animate({
+        width: '60px'
+      }, 500);
     }
   };
 
@@ -194,7 +207,7 @@ export default function TopBar() {
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}
           >
-            Team1 Is Best Team 4 Evah
+            CMMS SW
           </Typography>
           <Search>
             <SearchIconWrapper>

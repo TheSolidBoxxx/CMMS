@@ -27,3 +27,13 @@ create table users(
 	passwd varchar(50) not null,
 	email varchar(50) not null
 )
+
+create table tasks(
+	order_id smallint, 
+	status smallint, 
+	inicio date, 
+	fin date, 
+	tiempo_real smallint, 
+	hecho boolean,
+	pos smallint
+)

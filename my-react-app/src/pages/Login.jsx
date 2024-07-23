@@ -86,7 +86,7 @@ export default function Login(props) {
   };
 
   return (
-    <Grid container component="main" >
+    <Grid container component="main" sx={{ml:'85%', mt:'50%'}}>
       <CssBaseline />
       {/* <Grid item xs={false} sm={4} md={7} className={classes.image} /> */}
       <Grid

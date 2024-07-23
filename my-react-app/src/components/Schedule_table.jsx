@@ -18,6 +18,7 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
@@ -44,6 +45,12 @@ import { green } from '@mui/material/colors';
 
 import "./Schedule_table.css"
 
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+
 function mapDates(){
   const year = 2024;
   const weeksStartDates = [];
@@ -65,7 +72,7 @@ function mapDates(){
   return formattedWeeks;
 }
 
-function createData(id, no_responsable, apellido, no_req, inicio, fin, tiempo, intervalo, fecha_plan, grado, tiempo_real) {
+function createData(id, no_responsable, apellido, no_req, inicio, fin, tiempo, intervalo, fecha_plan, grado, tiempo_real, tipo) {
   const date_inicio = new Date(inicio);
   const options = { month: '2-digit', day: '2-digit', year: 'numeric' };
 
@@ -88,9 +95,30 @@ function createData(id, no_responsable, apellido, no_req, inicio, fin, tiempo, i
         intervalo,
         fecha_plan,
         grado,
-        tiempo_real
+        tiempo_real,
+        tipo
     };
   }
+
+  function createTaskData(id, status, inicio, fin, tiempo_real, hecho, pos) {
+    const date_inicio = new Date(inicio);
+    const options = { month: '2-digit', day: '2-digit', year: 'numeric' };
+
+    inicio == null ? '' : date_inicio.toLocaleDateString('en', options);
+
+    const date_fin = new Date(fin);
+    fin == null ? '' : date_fin.toLocaleDateString('en', options);
+
+    return {
+          id,
+          status, 
+          inicio, 
+          fin, 
+          tiempo_real, 
+          hecho, 
+          pos,
+      };
+    }
   
   // const rows = [
   //   createData(1, 'Máquina 1', 'PUT001', 'FCK001', 'Alcohol, isopos y trapo', 3, 'Diseño', 'Limpiar', 'Semanal', 'Preventivo', 15),
@@ -307,6 +335,56 @@ function createData(id, no_responsable, apellido, no_req, inicio, fin, tiempo, i
     numSelected: PropTypes.number.isRequired,
   };
 
+  function RegistryTask(dbData){
+    let nw_list = []
+
+    for(let i = 0; i < 16; i++)
+      nw_list[i] = 0;
+
+    for(let i = 1; i < dbData.status.length; i++){
+      nw_list[parseInt(dbData.status[i].substring(0,1)) - 1] = 1;
+    }
+
+    let reversed = nw_list.reverse();
+
+    const parseArray = arr => {
+      return arr.reduce((acc, val) => {
+        return (acc << 1) | val;
+      });
+    };
+
+    dbData.status = parseArray(reversed);
+    dbData.pos = dbData.mtArray.indexOf(dbData.pos);
+    delete dbData["mtArray"];
+
+    //console.log(dbData);
+    fetch('/api', {
+      method: 'PATCH',
+      
+      body: JSON.stringify(dbData),
+      headers: {'Content-Type': 'application/json'},
+    })
+    .then((incoming) => incoming.json())
+    .then((response) => {
+      //console.log(response.header);
+      //Alert.alert(JSON.stringify(response.body));
+    });
+
+    fetch('/tasks', {
+      method: 'POST',
+      
+      body: JSON.stringify(dbData),
+      headers: {'Content-Type': 'application/json'},
+    })
+    .then((incoming) => incoming.json())
+    .then((response) => {
+      //console.log(response.header);
+      //Alert.alert(JSON.stringify(response.body));
+    });
+
+    window.location.reload();
+  }
+
 export default function Schedule_table({data}) {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('id');
@@ -317,12 +395,80 @@ export default function Schedule_table({data}) {
 
     const [open, setOpen] = React.useState(false);
     const [req, setReq] = React.useState("TAREA C215-A");
-    const handleOpen = (key) => {setOpen(true); setReq(key);}
-    const handleClose = () => setOpen(false);
-
-    const currentDate = new Date();
-
+    const [ph_id, setPh_id] = React.useState(0);
+    const [pos, setPos] = React.useState(0);
+    const [mtArr, setMtArr] = React.useState([]);
+    const [compTasks, setCompTasks] = React.useState({});
     const [checked, setChecked] = React.useState([0]);
+    const handleOpen = (key, id, pos, mtArr, compTasks) => {setOpen(true); setReq(key); setPh_id(id); setPos(pos); setMtArr(mtArr); setCompTasks(compTasks);}
+    const handleClose = () => {setOpen(false); checked.fill(0)};
+
+    const currentDate = new Date();    
+
+    const [task, setTask] = React.useState('');
+    const [responsible, setResponsible] = React.useState('');
+    const [location, setLocation] = React.useState('');
+    const [mtType, setMtType] = React.useState('');
+    const [priority, setPriority] = React.useState('');
+    const [date, setDate] = React.useState(dayjs());
+    const [denominacion, setDenominacion] = React.useState('');
+    const [desc, setDesc] = React.useState('');
+    const [interval, setInterval] = React.useState(7);
+    const [realTime, setRealTime] = React.useState('');
+
+    const [startDate, setStartDate] = React.useState(dayjs());
+    const [endDate, setEndDate] = React.useState(dayjs());
+
+    const handleDenominacion = (event) => {
+      setDenominacion(event.target.value);
+    };
+
+    const handleChangeTask = (event) => {
+      setTask(event.target.value);
+    };
+
+    const handleChangeResponsible = (event) => {
+      setResponsible(event.target.value);
+    };
+
+    const handleChangeLocation = (event) => {
+      setLocation(event.target.value);
+    };
+
+    const handleChangeMtType = (event) => {
+      setMtType(event.target.value);
+
+      switch(event.target.value){
+        case 1:
+          setInterval(0);
+          setPriority(3);
+          break;
+        
+        case 2:
+        case 3:
+          setInterval(7);
+          break;
+      }
+    };
+
+    const handleChangePriority = (event) => {
+      setPriority(event.target.value);
+    };
+
+    const handleChangeDesc = (event) => {
+      setDesc(event.target.value);
+    };
+
+    const handleChangeInterval = (event) => {
+      event.target.value = event.target.value < 7 ? 7 : event.target.value;
+      event.target.value = event.target.value > 365 ? 365 : event.target.value;
+      console.log(event.target.value < 7);
+      setInterval(event.target.value);
+    };
+
+    const handleChangeRealTime = (event) => {
+      setRealTime(event.target.value);
+    };
 
     const handleToggle = (value) => () => {
       const currentIndex = checked.indexOf(value);
@@ -350,11 +496,22 @@ export default function Schedule_table({data}) {
       p: 4,
     };
 
-    var rows = [];
-    for(let i = 0; i < data.length; i++){
-      rows[i] = createData(Object.values(data)[i].id, Object.values(data)[i].no_responsable, Object.values(data)[i].apellido, Object.values(data)[i].no_req,
-                          Object.values(data)[i].inicio, Object.values(data)[i].fin, Object.values(data)[i].tiempo, Object.values(data)[i].intervalo,
-                          Object.values(data)[i].fecha_plan, Object.values(data)[i].grado, Object.values(data)[i].tiempo_real);
+    let rows = [];
+    let rowsTasks = [];
+    const today = dayjs();
+    const nextYear = dayjs().add(1, 'year');
+
+    for(let i = 0; i < data.data.length; i++){
+      rows[i] = createData(Object.values(data.data)[i].id, Object.values(data.data)[i].no_responsable, Object.values(data.data)[i].apellido, Object.values(data.data)[i].no_req,
+                          Object.values(data.data)[i].inicio, Object.values(data.data)[i].fin, Object.values(data.data)[i].tiempo, Object.values(data.data)[i].intervalo,
+                          Object.values(data.data)[i].fecha_plan, Object.values(data.data)[i].grado, Object.values(data.data)[i].tiempo_real,
+                          Object.values(data.data)[i].tipo);
+    }
+
+    for(let i = 0; i < data.tasksData.length; i++){
+      rowsTasks[i] = createTaskData(Object.values(data.tasksData)[i].order_id, Object.values(data.tasksData)[i].status,
+                          Object.values(data.tasksData)[i].inicio, Object.values(data.tasksData)[i].fin, Object.values(data.tasksData)[i].tiempo_real, Object.values(data.tasksData)[i].hecho,
+                          Object.values(data.tasksData)[i].pos);
     }
 
     const handleRequestSort = (event, property) => {
@@ -442,6 +599,7 @@ export default function Schedule_table({data}) {
                 {visibleRows.map((row, index) => {
                   const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
+                  let mt_array = []
   
                   return (
                     <TableRow
@@ -465,7 +623,7 @@ export default function Schedule_table({data}) {
                       <TableCell align="left">{row.id}</TableCell>
                       <TableCell align="left">{row.no_responsable}</TableCell>
                       <TableCell align="left">{row.apellido}</TableCell>
-                      <TableCell align="left" onClick={() => handleOpen(row.no_req)} style={{ color: 'blue', cursor: 'pointer' }}>{row.no_req}</TableCell>
+                      <TableCell align="left">{row.no_req}</TableCell>
                       <TableCell align="left">{row.inicio}</TableCell>
                       <TableCell align="left">{row.fin}</TableCell>
                       <TableCell align="left">{row.tiempo_real != null ? `${row.tiempo_real} minutos` : ''}</TableCell>
@@ -475,13 +633,25 @@ export default function Schedule_table({data}) {
                         let time_diff = d2.getTime() - d1.getTime();  
                         let day_diff = time_diff / (1000 * 60 * 60 * 24);
                         
-                        //console.log(`${data} e ${row.intervalo - ((i*7) % row.intervalo)} p ${day_diff}`);
                         if((row.intervalo - ((i*7) % row.intervalo) <= 7 && row.grado != 1 && day_diff > -7) || (day_diff > -7 && day_diff <= 0 && row.grado == 1)){
                           let Ctime_diff = d2.getTime() - currentDate.getTime();  
                           let Cday_diff = Ctime_diff / (1000 * 60 * 60 * 24);
                           
+                          mt_array.push(i);
+
+                          for(let j = 0; j < rowsTasks.length; j++){
+                            if(rowsTasks[j].id == row.id && rowsTasks[j].pos == mt_array.length - 1){
+                              return(
+                                <TableCell align="center" key={i} style={{backgroundColor: '#3bb143', color:'white', borderRadius:'50%'}}
+                                onClick={() => handleOpen(row.tipo, row.id, i, mt_array, rowsTasks[j])}>
+                                  {row.grado == 1? 'MC': row.grado == 2? 'MPT': 'MPD'}</TableCell>
+                              )     
+                            } 
+                          }
+                          
                           return(
-                            <TableCell className={Cday_diff > -7 && Cday_diff < 0 ? 'blink' : ''} align="center" key={i} style={{backgroundColor: row.grado == 1? '#FFC000': row.grado == 2? '#2F75B5': '#F4B084', color:'white', borderRadius:'50%'}}>
+                            <TableCell className={Cday_diff > -7 && Cday_diff < 0 ? 'blink' : ''} align="center" key={i} style={{backgroundColor: row.grado == 1? '#FFC000': row.grado == 2? '#2F75B5': '#F4B084', color:'white', borderRadius:'50%'}}
+                            onClick={() => handleOpen(row.tipo, row.id, i, mt_array, {})}>
                               {row.grado == 1? 'MC': row.grado == 2? 'MPT': 'MPD'}</TableCell>
                           )                       
                         }else{
@@ -517,7 +687,7 @@ export default function Schedule_table({data}) {
         </Paper>
       </Box>
 
-      <Modal
+    <Modal
       aria-labelledby="transition-modal-title"
       aria-describedby="transition-modal-description"
       open={open}
@@ -537,9 +707,8 @@ export default function Schedule_table({data}) {
           </Typography>
           <Typography id="transition-modal-description" component="span" sx={{ mt: 2, color:'black', fontSize: 16, m: 1 }}>
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-              {Tasks[req].map((value) => {
+              {Tasks[req].map((value, i) => {
                 const labelId = `checkbox-list-label-${value}`;
-
                 return (
                   <ListItem
                     key={value}
@@ -548,8 +717,9 @@ export default function Schedule_table({data}) {
                     <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
                       <ListItemIcon>
                         <Checkbox
+                          disabled={compTasks.hecho == false || compTasks.hecho == undefined ? false : true}
                           edge="start"
-                          checked={checked.indexOf(value) !== -1}
+                          checked={compTasks.hecho == false || compTasks.hecho == undefined ? checked.indexOf(value) !== -1 : (compTasks.status & (1 << i)) !== 0}
                           tabIndex={-1}
                           disableRipple
                           inputProps={{ 'aria-labelledby': labelId }}
@@ -562,8 +732,50 @@ export default function Schedule_table({data}) {
               })}
             </List>
           </Typography>
+
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker minDate={today} maxDate={nextYear}
+              label="Fecha inicio"
+              value={compTasks.hecho == true ? dayjs(compTasks.inicio) : startDate}
+              disabled={compTasks.hecho == true ? true : false}
+              onChange={(newValue) => setStartDate(newValue)}
+            />
+          </LocalizationProvider>
+
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker minDate={today} maxDate={nextYear}
+              label="Fecha fin"
+              value={compTasks.hecho == true ? dayjs(compTasks.fin) : endDate}
+              disabled={compTasks.hecho == true ? true : false}
+              onChange={(newValue) => setEndDate(newValue)}
+            />
+          </LocalizationProvider>
+
+          <TextField  style = {{width: 150}}
+            id="outlined-number"
+            label="Tiempo real (mins)"
+            type="number"
+            disabled={compTasks.hecho == true ? true : false}
+            value={compTasks.hecho == true ? compTasks.tiempo_real : realTime}
+            onChange={handleChangeRealTime}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+
           <Box sx={{mt:4}} textAlign='center'>
-            <Button variant="contained" endIcon={<Send />} onClick={() => {handleClose}}>
+            <Button variant="contained" disabled={compTasks.hecho == true ? true : false} endIcon={<Send />} onClick={() => RegistryTask(
+              {
+                "id": ph_id,
+                "status": checked,
+                "inicio": startDate,
+                "fin": endDate,
+                "tiempo_real": realTime,
+                "hecho": true,
+                "pos": pos,
+                "mtArray": mtArr
+              }
+            )}>
               ENVIAR
             </Button>
           </Box>
