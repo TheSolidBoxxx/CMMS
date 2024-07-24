@@ -51,7 +51,8 @@ export default function Graphic({data}) { //Tasks[req].map((value) => {
     data[i].prioridad == 1 ? p1++ : data[i].prioridad == 2 ? p2++ : p3++;
 
     const regDate = new Date(data[i].fecha_plan);
-    let dayDiff = Math.round((regDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+    let dayDiff = ((regDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+    dayDiff = dayDiff >= 0 ? parseInt(dayDiff) + 1 : parseInt(dayDiff);
     dayDiff >= 0 ? onTime++ : overdue++;
 
     data[i].fecha_plan = date_plan.toLocaleDateString('en', options);
@@ -175,7 +176,7 @@ export default function Graphic({data}) { //Tasks[req].map((value) => {
         </Paper>
 
         <Paper elevation={3} sx={{padding: 2, borderRadius: 5, boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)', mt:5, ml:3}}>
-        <h2 style={{textAlign: 'center'}}>Prioridades</h2>
+        <h2 style={{textAlign: 'center'}}>Estado de tareas</h2>
           <BarChart
             series={[
               { data: [pending, made] },
@@ -192,7 +193,7 @@ export default function Graphic({data}) { //Tasks[req].map((value) => {
         </Paper>
 
         <Paper elevation={3} sx={{padding: 2, borderRadius: 5, boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)', mt:5, ml:5, mr:9}}>
-        <h2 style={{textAlign: 'center'}}>Estado de tareas por mes</h2>
+        <h2 style={{textAlign: 'center'}}>Estado y tiempos de tareas por mes</h2>
           <BarChart
             series={[
               { data: transposed[0], label: 'Pendiente a tiempo' }, //Pending on-time, pending overdue, completed on-time, completed overdue

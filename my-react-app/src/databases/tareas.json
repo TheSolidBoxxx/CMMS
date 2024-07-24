@@ -7,22 +7,78 @@
         "5. Cambiar filtros de limpieza del colector de ser necesario",
         "6. Al cambiar los fileros calibrar el control Delta P"
     ],
+    
+    "TAREA A123-B": [
+        "1. Apagar la computadora y desconectarla de la fuente de energía.",
+        "2. Limpiar el exterior del gabinete con un paño seco.",
+        "3. Abrir el gabinete y limpiar el polvo interno con aire comprimido.",
+        "4. Revisar y ajustar las conexiones de los cables internos.",
+        "5. Verificar que los ventiladores funcionen correctamente.",
+        "6. Comprobar la integridad de los discos duros y unidades SSD.",
+        "7. Actualizar el sistema operativo y los controladores.",
+        "8. Realizar un análisis antivirus completo.",
+        "9. Eliminar archivos temporales y desfragmentar el disco duro.",
+        "10. Comprobar el estado de la memoria RAM mediante herramientas de diagnóstico.",
+        "11. Limpiar el teclado y el mouse.",
+        "12. Verificar el correcto funcionamiento del monitor.",
+        "13. Hacer una copia de seguridad de los datos importantes."
+  ],
 
-    "TAREA 247-C": [
-        "1. Verificar funcionamiento inicial para detectar irregularidades",
-        "2. Revisar la caída de presión entre filtros, si es mayor a cero y el led de 'Alarm' está encendido, requiere cambio de filtros",
-        "3. Desconectar electricidad y aire comprimido",
-        "4. Cambiar filtros de aire comprimido de ser necesario",
-        "5. Cambiar filtros de limpieza del colector de ser necesario",
-        "6. Al cambiar los fileros calibrar el control Delta P"
-    ],
+  "TAREA B234-C": [
+        "1. Apagar y desconectar la impresora de la fuente de energía.",
+        "2. Limpiar el exterior de la impresora con un paño suave.",
+        "3. Abrir la impresora y limpiar los rodillos con un paño húmedo.",
+        "4. Verificar y limpiar el tambor y el fusor.",
+        "5. Comprobar y reemplazar el tóner si es necesario.",
+        "6. Limpiar la bandeja de papel y asegurarse de que no haya obstrucciones.",
+        "7. Calibrar la impresora para asegurar la calidad de impresión.",
+        "8. Imprimir una página de prueba y verificar la calidad de la impresión.",
+        "9. Actualizar el firmware de la impresora.",
+        "10. Comprobar y limpiar los sensores de papel.",
+        "11. Realizar un diagnóstico interno a través del software de la impresora."
+  ],
 
-    "TAREA 8": [
-        "1. Verificar funcionamiento inicial para detectar irregularidades",
-        "2. Revisar la caída de presión entre filtros, si es mayor a cero y el led de 'Alarm' está encendido, requiere cambio de filtros",
-        "3. Desconectar electricidad y aire comprimido",
-        "4. Cambiar filtros de aire comprimido de ser necesario",
-        "5. Cambiar filtros de limpieza del colector de ser necesario",
-        "6. Al cambiar los fileros calibrar el control Delta P"
-    ]
+  "TAREA C345-D": [
+        "1. Apagar y desconectar el aire acondicionado de la corriente eléctrica.",
+        "2. Limpiar el filtro de aire o reemplazarlo si es necesario.",
+        "3. Limpiar las bobinas del evaporador y del condensador.",
+        "4. Revisar el estado de las aletas del condensador y enderezarlas si están dobladas.",
+        "5. Verificar y limpiar la bandeja de drenaje y la línea de drenaje.",
+        "6. Comprobar los niveles de refrigerante y recargar si es necesario.",
+        "7. Inspeccionar el ventilador del condensador y limpiarlo.",
+        "8. Revisar las conexiones eléctricas y apretar si es necesario.",
+        "9. Comprobar el termostato y calibrarlo si es necesario.",
+        "10. Encender el aire acondicionado y verificar su funcionamiento.",
+        "11. Escuchar ruidos inusuales durante el funcionamiento y resolver cualquier problema detectado."
+  ],
+
+  "TAREA D456-E": [
+        "1. Realizar una copia de seguridad completa de todos los datos.",
+        "2. Actualizar el sistema operativo y los parches de seguridad.",
+        "3. Revisar los logs del sistema para detectar errores o advertencias.",
+        "4. Comprobar el estado de los discos duros y realizar pruebas de integridad.",
+        "5. Limpiar el interior del servidor con aire comprimido.",
+        "6. Verificar la temperatura de funcionamiento y limpiar los ventiladores.",
+        "7. Comprobar el estado de la memoria RAM mediante herramientas de diagnóstico.",
+        "8. Revisar las conexiones de red y los cables.",
+        "9. Realizar pruebas de rendimiento de la red.",
+        "10. Actualizar el firmware de los componentes del servidor.",
+        "11. Comprobar el estado de la fuente de alimentación y los UPS.",
+        "12. Probar el sistema de redundancia y recuperación de datos."
+  ],
+
+  "TAREA E567-F": [
+        "1. Apagar el generador y desconectarlo de la carga.",
+        "2. Revisar y limpiar los filtros de aire.",
+        "3. Comprobar el nivel de aceite y cambiarlo si es necesario.",
+        "4. Inspeccionar las bujías y reemplazarlas si están desgastadas.",
+        "5. Revisar el sistema de combustible y limpiar el filtro de combustible.",
+        "6. Inspeccionar el sistema de escape y limpiar si es necesario.",
+        "7. Comprobar las conexiones eléctricas y apretar si es necesario.",
+        "8. Revisar las correas y las poleas para detectar desgaste.",
+        "9. Probar el funcionamiento del generador en vacío y bajo carga.",
+        "10. Inspeccionar y limpiar el radiador y el sistema de enfriamiento.",
+        "11. Verificar los niveles de refrigerante y recargar si es necesario.",
+        "12. Registrar todos los mantenimientos realizados y programar el próximo mantenimiento."
+  ]
 }

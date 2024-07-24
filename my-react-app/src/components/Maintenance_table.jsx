@@ -487,8 +487,8 @@ export default function Maintenance_table({data}) {
       p: 4,
     };
 
-    var rows = [];
-    var usrs = [];
+    let rows = [];
+    let usrs = [];
     const currentDate = new Date();
     const today = dayjs();
     const nextYear = dayjs().add(1, 'year');
@@ -496,7 +496,8 @@ export default function Maintenance_table({data}) {
     for(let i = 0; i < data.data.length; i++){
       
       const regDate = new Date(Object.values(data.data)[i].fecha_plan);
-      var dayDiff = Math.round((regDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+      let dayDiff = ((regDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+      dayDiff = dayDiff >= 0 ? parseInt(dayDiff) + 1 : parseInt(dayDiff);
 
       rows[i] = createData(Object.values(data.data)[i].id, Object.values(data.data)[i].no_req, Object.values(data.data)[i].denominacion, Object.values(data.data)[i].tipo,
                     Object.values(data.data)[i].fecha_plan, Object.values(data.data)[i].prioridad, Object.values(data.data)[i].hecho, Object.values(data.data)[i].ubicacion,
@@ -624,11 +625,11 @@ export default function Maintenance_table({data}) {
                       <TableCell align="left">{row.fecha_plan}</TableCell>
                       <TableCell align="center" style={{backgroundColor: row.prioridad == 1? 'green' : row.prioridad == 2? 'yellow' : 'red', color: row.prioridad == 2? 'black' : 'white'}}>{row.prioridad}</TableCell>
                       <TableCell align="left">{row.dia}</TableCell>
-                      <TableCell align="left">{row.hecho == true ? 'Y' : 'N'}</TableCell>
+                      <TableCell align="left">{<Checkbox checked={row.hecho} size="small" />}</TableCell>
                       <TableCell align="left">{row.ubicacion}</TableCell>
                       <TableCell align="left" style={{backgroundColor: row.grado == 1? '#FFC000': row.grado == 2? '#2F75B5': '#F4B084'}}>{row.grado == 1? 'MC': row.grado == 2? 'MPT': 'MPD'}</TableCell>
                       <TableCell align="left">{row.descripcion}</TableCell>
-                      <TableCell align="left">{`${row.intervalo} días`}</TableCell>
+                      <TableCell align="left">{row.intervalo == 0 ? 'N/A' : `${row.intervalo} días`}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -881,7 +882,7 @@ export default function Maintenance_table({data}) {
             <FormHelperText>Required</FormHelperText>
           </FormControl>
 
-          <FormControl required sx={{ m: 1, minWidth: 120 }} disabled={mtType == 1}>
+          <FormControl required sx={{ m: 1, minWidth: 120 }}>
             <InputLabel id="demo-simple-select-required-label">Prioridad</InputLabel>
             <Select
               labelId="demo-simple-select-required-label"
@@ -889,6 +890,7 @@ export default function Maintenance_table({data}) {
               value={priority}
               label="Prioridad *"
               onChange={handleChangePriority}
+              readOnly={mtType == 1 ? true : false}
             >
               <MenuItem value="">
               </MenuItem>

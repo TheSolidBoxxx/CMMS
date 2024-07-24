@@ -28,6 +28,7 @@
     width: 100%; 
     max-height: 100vh; 
     overflow: auto; 
+    z-index: 2;
 }
 
 .css-dip3t8{

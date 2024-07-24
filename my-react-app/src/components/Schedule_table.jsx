@@ -161,7 +161,7 @@ function createData(id, no_responsable, apellido, no_req, inicio, fin, tiempo, i
     {
       id: 'id',
       numeric: false,
-      disablePadding: true,
+      disablePadding: false,
       label: 'ID',
     },
     {
@@ -214,17 +214,6 @@ function createData(id, no_responsable, apellido, no_req, inicio, fin, tiempo, i
     return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox">
-            <Checkbox
-              color="primary"
-              indeterminate={numSelected > 0 && numSelected < rowCount}
-              checked={rowCount > 0 && numSelected === rowCount}
-              onChange={onSelectAllClick}
-              inputProps={{
-                'aria-label': 'select all desserts',
-              }}
-            />
-          </TableCell>
           {headCells.map((headCell) => (
             <TableCell
               key={headCell.id}
@@ -404,69 +393,14 @@ export default function Schedule_table({data}) {
     const handleClose = () => {setOpen(false); checked.fill(0)};
 
     const currentDate = new Date();    
-
-    const [task, setTask] = React.useState('');
-    const [responsible, setResponsible] = React.useState('');
-    const [location, setLocation] = React.useState('');
-    const [mtType, setMtType] = React.useState('');
-    const [priority, setPriority] = React.useState('');
-    const [date, setDate] = React.useState(dayjs());
-    const [denominacion, setDenominacion] = React.useState('');
-    const [desc, setDesc] = React.useState('');
-    const [interval, setInterval] = React.useState(7);
-    const [realTime, setRealTime] = React.useState('');
+    const [realTime, setRealTime] = React.useState(30);
 
     const [startDate, setStartDate] = React.useState(dayjs());
     const [endDate, setEndDate] = React.useState(dayjs());
 
-    const handleDenominacion = (event) => {
-      setDenominacion(event.target.value);
-    };
-
-    const handleChangeTask = (event) => {
-      setTask(event.target.value);
-    };
-
-    const handleChangeResponsible = (event) => {
-      setResponsible(event.target.value);
-    };
-
-    const handleChangeLocation = (event) => {
-      setLocation(event.target.value);
-    };
-
-    const handleChangeMtType = (event) => {
-      setMtType(event.target.value);
-
-      switch(event.target.value){
-        case 1:
-          setInterval(0);
-          setPriority(3);
-          break;
-        
-        case 2:
-        case 3:
-          setInterval(7);
-          break;
-      }
-    };
-
-    const handleChangePriority = (event) => {
-      setPriority(event.target.value);
-    };
-
-    const handleChangeDesc = (event) => {
-      setDesc(event.target.value);
-    };
-
-    const handleChangeInterval = (event) => {
-      event.target.value = event.target.value < 7 ? 7 : event.target.value;
-      event.target.value = event.target.value > 365 ? 365 : event.target.value;
-      console.log(event.target.value < 7);
-      setInterval(event.target.value);
-    };
-
     const handleChangeRealTime = (event) => {
+      event.target.value = event.target.value < 1 ? 1 : event.target.value;
+      event.target.value = event.target.value > 32767 ? 32767 : event.target.value;
       setRealTime(event.target.value);
     };
 
@@ -610,16 +544,6 @@ export default function Schedule_table({data}) {
                       key={row.id}
                       selected={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          onClick={(event) => handleClick(event, row.id)}
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId,
-                          }}
-                        />
-                      </TableCell>
                       <TableCell align="left">{row.id}</TableCell>
                       <TableCell align="left">{row.no_responsable}</TableCell>
                       <TableCell align="left">{row.apellido}</TableCell>
@@ -717,7 +641,6 @@ export default function Schedule_table({data}) {
                     <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
                       <ListItemIcon>
                         <Checkbox
-                          disabled={compTasks.hecho == false || compTasks.hecho == undefined ? false : true}
                           edge="start"
                           checked={compTasks.hecho == false || compTasks.hecho == undefined ? checked.indexOf(value) !== -1 : (compTasks.status & (1 << i)) !== 0}
                           tabIndex={-1}
@@ -736,8 +659,8 @@ export default function Schedule_table({data}) {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker minDate={today} maxDate={nextYear}
               label="Fecha inicio"
+              readOnly={compTasks.hecho == true ? true : false}
               value={compTasks.hecho == true ? dayjs(compTasks.inicio) : startDate}
-              disabled={compTasks.hecho == true ? true : false}
               onChange={(newValue) => setStartDate(newValue)}
             />
           </LocalizationProvider>
@@ -745,8 +668,8 @@ export default function Schedule_table({data}) {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker minDate={today} maxDate={nextYear}
               label="Fecha fin"
+              readOnly={compTasks.hecho == true ? true : false}
               value={compTasks.hecho == true ? dayjs(compTasks.fin) : endDate}
-              disabled={compTasks.hecho == true ? true : false}
               onChange={(newValue) => setEndDate(newValue)}
             />
           </LocalizationProvider>
@@ -755,11 +678,13 @@ export default function Schedule_table({data}) {
             id="outlined-number"
             label="Tiempo real (mins)"
             type="number"
-            disabled={compTasks.hecho == true ? true : false}
             value={compTasks.hecho == true ? compTasks.tiempo_real : realTime}
             onChange={handleChangeRealTime}
             InputLabelProps={{
               shrink: true,
+            }}
+            InputProps={{
+              readOnly: compTasks.hecho == true ? true : false,
             }}
           />
 
